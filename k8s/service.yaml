@@ -1,0 +1,15 @@
+# ==============================================
+# ClusterIP Service to expose Flask app
+# ==============================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service
+spec:
+  selector:
+    app: flask-app
+  ports:
+  - protocol: TCP
+    port: 80         # Service port (internal)
+    targetPort: 3000 # Container port
+  type: ClusterIP    # Change to NodePort/LoadBalancer if external access needed
