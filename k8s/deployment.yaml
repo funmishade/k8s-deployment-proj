@@ -22,14 +22,14 @@ spec:
         image: funmishade/crona:v1
         ports:
         - containerPort: 3000
-        # Liveness probe checks if pod is alive
+        # Liveness probe checks if pod is alive, Kubernetes waits 5 seconds after the container starts, then begins checking /health every 10 seconds.
         livenessProbe:
           httpGet:
             path: /health
             port: 3000
           initialDelaySeconds: 5
           periodSeconds: 10
-        # Readiness probe checks if pod is ready for traffic
+        # Readiness probe checks if pod is ready for traffic, Kubernetes checks /health every 5 seconds (after waiting 3 seconds) and stops sending traffic to the pod if it fails, without restarting it.
         readinessProbe:
           httpGet:
             path: /health

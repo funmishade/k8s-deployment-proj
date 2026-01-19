@@ -1,0 +1,138 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flask-ingress
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: localhost  # for local testing
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: flask-service
+            port:
+              number: 80
+
+# 1️⃣ API version & resource type
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+
+
+# This declares an Ingress resource
+
+# networking.k8s.io/v1 is the stable API for Ingress
+
+# Ingress is a Layer 7 (HTTP/HTTPS) router, not a load balancer itself
+
+# 👉 Think of Ingress as traffic rules, not the traffic cop.
+
+# 2️⃣ Metadata
+# metadata:
+#   name: flask-ingress
+#   namespace: default
+
+
+# Names the Ingress flask-ingress
+
+# It lives in the default namespace
+
+# It will only see Services in the same namespace
+
+# ⚠️ If your Service was in another namespace, this Ingress would not work.
+
+# 3️⃣ Annotation (NGINX-specific behavior)
+# annotations:
+#   nginx.ingress.kubernetes.io/rewrite-target: /
+
+
+# This tells the NGINX Ingress Controller:
+
+# “Rewrite incoming paths to / before forwarding to the backend service”
+
+# Example:
+
+# Incoming request: http://localhost/something
+
+# Backend receives: /
+
+# 👉 Very common for apps (like Flask) that don’t expect prefixed paths.
+
+# 4️⃣ Spec: Routing rules
+# spec:
+#   rules:
+
+
+# This is where traffic routing logic is defined.
+
+# 5️⃣ Host rule
+# - host: localhost
+
+
+# This means:
+
+# Only requests sent to localhost will match
+
+# Perfect for Kind / local testing
+
+# In production, this would be:
+
+# host: myapp.example.com
+
+# 6️⃣ HTTP paths
+# http:
+#   paths:
+
+
+# Ingress supports path-based routing, e.g.:
+
+# /api
+
+# /auth
+
+# /
+
+# You’re using / (everything).
+
+# 7️⃣ Path configuration
+# - path: /
+#   pathType: Prefix
+
+
+# path: / → match everything
+
+# Prefix means:
+
+# /
+
+# /login
+
+# /health
+
+# /anything
+
+# All traffic matches.
+
+# 8️⃣ Backend service
+# backend:
+#   service:
+#     name: flask-service
+#     port:
+#       number: 80
+
+
+# This is the most important part 👇
+
+# Traffic is forwarded to:
+
+# Service name: flask-service
+
+# Service port: 80
+
+# The Service then load-balances traffic to Pods
+
+# Flow

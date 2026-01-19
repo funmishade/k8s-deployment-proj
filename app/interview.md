@@ -17,7 +17,10 @@ CMD python app.py
 
 
 
-
+“How do you integrate security scanning in CI/CD?”
+“How do you enforce quality gates?”
+“Explain Trivy vs SonarQube”
+“How do you fail a pipeline on vulnerabilities?”
 
 
 
