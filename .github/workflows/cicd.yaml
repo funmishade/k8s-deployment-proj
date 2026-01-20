@@ -46,10 +46,6 @@ jobs:
             -u "${{ secrets.DOCKERHUB_USERNAME }}" \
             --password-stdin
 
-      # - name: Build Docker image
-      #   run: |
-      #     docker build -t docker.io/funmishade/crona:${{ github.sha }} .
-           
       - name: Build Docker image
         run: |
           docker build \
@@ -60,7 +56,7 @@ jobs:
       - name: Run Trivy vulnerability scan
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: docker.io/funmishade/crona:${{ github.sha }}
+          image-ref: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/crona:${{ github.sha }}
           format: template
           template: "@/contrib/sarif.tpl"
           output: trivy-results.sarif
@@ -71,12 +67,12 @@ jobs:
         with:
           sarif_file: trivy-results.sarif
 
-      - name: Push image to Docker Hub
+      - name: Push Docker image to Docker Hub
         run: |
-          docker push docker.io/funmishade/crona:${{ github.sha }}
+          docker push docker.io/${{ secrets.DOCKERHUB_USERNAME }}/crona:${{ github.sha }}
 
   sonar-analysis:
-    name: SonarQube Code Quality Scan
+    name: SonarCloud Code Quality Scan
     runs-on: ubuntu-latest
     needs: build
 
@@ -84,14 +80,14 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Run SonarQube Scan
+      - name: Run SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v2
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           args: >
             -Dsonar.projectKey=crona-app
+            -Dsonar.organization=funmi-dev
+            -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.sources=app
-            -Dsonar.tests=.
+            -Dsonar.tests=app/tests
