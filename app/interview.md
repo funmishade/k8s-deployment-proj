@@ -26,3 +26,7 @@ CMD python app.py
 
 ISSUED ENCOUNTERED
 after building the dockerfile, the app, /metric and /health were unreachable. to debug this i 
+
+git add .github/workflows/cicd.yaml
+git commit -m "Move workflow to correct directory"
+git push origin feature/ci-test
