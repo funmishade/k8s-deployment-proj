@@ -46,9 +46,16 @@ jobs:
             -u "${{ secrets.DOCKERHUB_USERNAME }}" \
             --password-stdin
 
+      # - name: Build Docker image
+      #   run: |
+      #     docker build -t docker.io/funmishade/crona:${{ github.sha }} .
+           
       - name: Build Docker image
         run: |
-          docker build -t docker.io/funmishade/crona:${{ github.sha }} .
+          docker build \
+            -f app/Dockerfile \
+            -t docker.io/${{ secrets.DOCKERHUB_USERNAME }}/crona:${{ github.sha }} \
+            app
 
       - name: Run Trivy vulnerability scan
         uses: aquasecurity/trivy-action@master
