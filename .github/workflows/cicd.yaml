@@ -93,4 +93,4 @@ jobs:
             -Dsonar.tests=app/tests
             -Dsonar.branch.name=main
 
-            
+
